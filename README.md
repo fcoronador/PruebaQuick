@@ -1,7 +1,7 @@
 # PruebaQuick
 
-El siguiente aplicativo basado en Django Rest, es el resultado de los requerimientos expuestos en la prueba
-para ejecutar el aplicativo es necesario tener el lenguaje Python en su version 3.5, Django Rest Framework.
+El siguiente aplicativo basado en Django Rest, es el resultado de los requerimientos expuestos en la prueba.
+Es necesario tener el lenguaje Python en su version 3.5, Django Rest Framework.
 
 
 Para ejecutar el aplicativo:
