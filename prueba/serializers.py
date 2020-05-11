@@ -42,7 +42,6 @@ class productSerializer(serializers.Serializer):
 
 
 class billsSerializer(serializers.Serializer):
-    client_id = serializers.IntegerField()
     company_name = serializers.CharField(max_length=30)
     nit = serializers.IntegerField()
     code = serializers.IntegerField()
@@ -51,7 +50,6 @@ class billsSerializer(serializers.Serializer):
         return bills.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.company_name = validated_data.get('company_name', instance.company_name)
         instance.nit = validated_data.get('nit', instance.nit)
         instance.code = validated_data.get('code', instance.code)
         instance.save()

@@ -26,7 +26,8 @@ nuevo.save()
 
 
 class bills(models.Model):
-    client_id = models.ForeignKey(clients, on_delete=models.CASCADE)
+    client_id = models.ForeignKey(clients, on_delete=models.CASCADE,
+    blank=True, null=True)
     company_name = models.CharField(max_length=30)
     nit = models.IntegerField()
     code = models.IntegerField()
