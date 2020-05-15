@@ -1,6 +1,8 @@
+from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
-
-from prueba.models import clients, products, bills
+from prueba.models import clients, products, bills,usuarios,User
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth.models import User
 
 
 class clientsSerializer(serializers.Serializer):
@@ -10,6 +12,7 @@ class clientsSerializer(serializers.Serializer):
     last_name = serializers.CharField(max_length=100)
     email = serializers.CharField(max_length=30)
     contra = serializers.CharField(max_length=200)
+
 
     def create(self, validated_data):
         return clients.objects.create(**validated_data)
@@ -54,3 +57,35 @@ class billsSerializer(serializers.Serializer):
         instance.code = validated_data.get('code', instance.code)
         instance.save()
         return instance
+
+class UsuariosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username','password','email',
+                  "last_login", "is_superuser",
+                  "username" , "first_name", "is_staff",
+                  "is_active" , "date_joined" ,"last_name"]
+
+
+    def create(self, validated_data):
+        user = User.objects.create(
+            email=validated_data['email'],
+            username=validated_data['username'],
+            password=make_password(validated_data['password']))
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
+
+
+#-----------------------------------------------------
+
+
+class TokenSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, usuarios):
+        token = super().get_token(usuarios)
+
+        # Add custom claims
+        token['email'] = usuarios.email
+        # ...
+        return token

@@ -1,5 +1,7 @@
 from django.db import models
-
+from django.contrib.auth.models import (User,AbstractBaseUser, BaseUserManager, PermissionsMixin)
+from datetime import datetime, timedelta
+from django.conf import settings
 
 class clients(models.Model):
     document = models.IntegerField()
@@ -8,9 +10,14 @@ class clients(models.Model):
     email = models.CharField(max_length=30)
     contra = models.CharField(max_length=200, null=True)
 
+class usuarios(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    email = models.CharField(max_length=30)
+    contra = models.CharField(max_length=200)
 
-nuevo = clients(document=1013646919, first_name='Fredy',
-                last_name='Coronado', email='fecoronado9@misena.edu.co', contra='password')
+
+
+nuevo = clients(document=1013646919, first_name='Fredy',last_name='Coronado', email='fecoronado9@misena.edu.co', contra='password')
 nuevo.save()
 
 
@@ -20,8 +27,7 @@ class products(models.Model):
     attribute4 = models.CharField(max_length=100)
 
 
-nuevo = products(name='Moto', description='Kawasaki',
-                 attribute4='Alto rendimiento')
+nuevo = products(name='Moto', description='Kawasaki',attribute4='Alto rendimiento')
 nuevo.save()
 
 
@@ -36,3 +42,5 @@ class bills(models.Model):
 class bills_products(models.Model):
     bill_id = models.ForeignKey(bills, on_delete=models.CASCADE)
     product_id = models.ForeignKey(products, on_delete=models.CASCADE)
+
+

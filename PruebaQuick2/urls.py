@@ -1,3 +1,4 @@
+
 """PruebaQuick2 URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -14,25 +15,33 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
 from rest_framework import renderers
-from prueba.views import ClienteViewSet,ProductoViewSet,FacturaViewSet
-from django.urls import path, include
+from prueba.views import ClienteViewSet,ProductoViewSet,FacturaViewSet, RegistroViewSet,LoginView
 from rest_framework.routers import DefaultRouter
-
-
-
+#---------LOGIN
+from django.conf.urls import include
+#______import para clases vistas
+from django.urls import path
+from prueba import views
+#--------para JWT
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
 router =DefaultRouter()
 router.register(r'clientes', ClienteViewSet)
 router.register(r'facturas', FacturaViewSet)
 router.register(r'productos',ProductoViewSet)
-
-
+router.register(r'registro',RegistroViewSet)
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include(router.urls)),
+    path('login/', views.login),
+    path('api-auth/', include('rest_framework.urls')),
+    path('login2/',LoginView.as_view()),
+    path('token/refresh/',TokenRefreshView.as_view())
 ]
+
+
+
