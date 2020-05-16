@@ -15,29 +15,22 @@ class usuarios(models.Model):
     email = models.CharField(max_length=30)
     contra = models.CharField(max_length=200)
 
-
-
-nuevo = clients(document=1013646919, first_name='Fredy',last_name='Coronado', email='fecoronado9@misena.edu.co', contra='password')
-nuevo.save()
-
+#nuevo = clients(document=1013646919,
+# first_name='Fredy',last_name='Coronado',
+# email='fecoronado9@misena.edu.co',
+# contra='password')
+#nuevo.save()
 
 class products(models.Model):
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=200)
     attribute4 = models.CharField(max_length=100)
 
-
-nuevo = products(name='Moto', description='Kawasaki',attribute4='Alto rendimiento')
-nuevo.save()
-
-
 class bills(models.Model):
-    client_id = models.ForeignKey(clients, on_delete=models.CASCADE,
-    blank=True, null=True)
+    client_id = models.ForeignKey(clients, on_delete=models.CASCADE)
     company_name = models.CharField(max_length=30)
     nit = models.IntegerField()
     code = models.IntegerField()
-
 
 class bills_products(models.Model):
     bill_id = models.ForeignKey(bills, on_delete=models.CASCADE)

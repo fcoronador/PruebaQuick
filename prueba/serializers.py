@@ -1,18 +1,21 @@
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
-from prueba.models import clients, products, bills,usuarios,User
+from prueba.models import *
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.models import User
 
 
-class clientsSerializer(serializers.Serializer):
+class clientsSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     document = serializers.IntegerField()
     first_name = serializers.CharField(max_length=100)
     last_name = serializers.CharField(max_length=100)
     email = serializers.CharField(max_length=30)
     contra = serializers.CharField(max_length=200)
-
+    class Meta:
+        model = clients
+        fields = ['id','document','first_name','last_name',
+                  'email','contra']
 
     def create(self, validated_data):
         return clients.objects.create(**validated_data)
@@ -27,7 +30,7 @@ class clientsSerializer(serializers.Serializer):
         return instance
 
 
-class productSerializer(serializers.Serializer):
+class productSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(max_length=30)
     description = serializers.CharField(max_length=200)
@@ -43,8 +46,12 @@ class productSerializer(serializers.Serializer):
         instance.save()
         return instance
 
+    class Meta:
+        model = products
+        fields = ['id','name','description','attribute4']
 
-class billsSerializer(serializers.Serializer):
+class billsSerializer(serializers.ModelSerializer):
+    client_id=clients.objects.get
     company_name = serializers.CharField(max_length=30)
     nit = serializers.IntegerField()
     code = serializers.IntegerField()
@@ -53,10 +60,14 @@ class billsSerializer(serializers.Serializer):
         return bills.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
+        instance.company_name = validated_data.get('company_name', instance.company_name)
         instance.nit = validated_data.get('nit', instance.nit)
         instance.code = validated_data.get('code', instance.code)
         instance.save()
         return instance
+    class Meta:
+        model = bills
+        fields = ['client_id','nit','code','company_name']
 
 class UsuariosSerializer(serializers.ModelSerializer):
     class Meta:
@@ -76,6 +87,11 @@ class UsuariosSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+class bills_productsSerializer(serializers.ModelSerializer):
+    bill_id = bills.objects.get
+    product_id = products.objects.get
+    class Meta:
+        model = bills_products
 
 #-----------------------------------------------------
 

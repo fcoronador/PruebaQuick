@@ -40,7 +40,7 @@ urlpatterns = [
     path('login/', views.login),
     path('api-auth/', include('rest_framework.urls')),
     path('login2/',LoginView.as_view()),
-    path('token/refresh/',TokenRefreshView.as_view())
+    path('imprimir/',views.imprimir)
 ]
 
 
