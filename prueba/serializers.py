@@ -1,8 +1,9 @@
 from django.contrib.auth.hashers import make_password
-from rest_framework import serializers
-from prueba.models import *
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.models import User
+from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from prueba.models import *
 
 
 class clientsSerializer(serializers.ModelSerializer):
@@ -12,10 +13,11 @@ class clientsSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(max_length=100)
     email = serializers.CharField(max_length=30)
     contra = serializers.CharField(max_length=200)
+
     class Meta:
         model = clients
-        fields = ['id','document','first_name','last_name',
-                  'email','contra']
+        fields = ['id', 'document', 'first_name', 'last_name',
+                  'email', 'contra']
 
     def create(self, validated_data):
         return clients.objects.create(**validated_data)
@@ -48,10 +50,11 @@ class productSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = products
-        fields = ['id','name','description','attribute4']
+        fields = ['id', 'name', 'description', 'attribute4']
+
 
 class billsSerializer(serializers.ModelSerializer):
-    client_id=clients.objects.get
+    client_id = clients.objects.get
     company_name = serializers.CharField(max_length=30)
     nit = serializers.IntegerField()
     code = serializers.IntegerField()
@@ -65,18 +68,19 @@ class billsSerializer(serializers.ModelSerializer):
         instance.code = validated_data.get('code', instance.code)
         instance.save()
         return instance
+
     class Meta:
         model = bills
-        fields = ['client_id','nit','code','company_name']
+        fields = ['client_id', 'nit', 'code', 'company_name']
+
 
 class UsuariosSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username','password','email',
+        fields = ['id', 'username', 'password', 'email',
                   "last_login", "is_superuser",
-                  "username" , "first_name", "is_staff",
-                  "is_active" , "date_joined" ,"last_name"]
-
+                  "username", "first_name", "is_staff",
+                  "is_active", "date_joined", "last_name"]
 
     def create(self, validated_data):
         user = User.objects.create(
@@ -87,13 +91,16 @@ class UsuariosSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+
 class bills_productsSerializer(serializers.ModelSerializer):
     bill_id = bills.objects.get
     product_id = products.objects.get
+
     class Meta:
         model = bills_products
 
-#-----------------------------------------------------
+
+# -----------------------------------------------------
 
 
 class TokenSerializer(TokenObtainPairSerializer):

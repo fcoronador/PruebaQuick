@@ -1,20 +1,15 @@
+import csv
 
 import jwt
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework.permissions import IsAuthenticated, AllowAny
-
-import csv
 from django.http import HttpResponse
-
 from rest_framework import renderers
-from rest_framework import status,permissions
+from rest_framework import status, permissions
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView
 
-from prueba.models import clients, bills, products, usuarios
 from prueba.serializers import *
 
 
@@ -111,30 +106,21 @@ def login(request, format=None):
                 return Response(data='No se encuentra el usuario', status=status.HTTP_400_BAD_REQUEST)
             serializerU = UsuariosSerializer(usuario)
             if serializerU.data['contra'] == request.data['contra']:
-
                 encoded = jwt.encode(serializerU.data, 'secret', algorithm='HS256')
                 return Response(data={"mensaje": "Los datos son correctos.  bienvenido {}"
                                 .format(serializer.data['email']), "id": encoded},
                                 status=status.HTTP_200_OK)
         return Response(data='Los datos no son correctos', status=status.HTTP_400_BAD_REQUEST)
+
+
 # -------------------class
 @api_view(['GET'])
 def imprimir(request, format=None):
-    if request.method=='GET':
-
+    if request.method == 'GET':
 
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
-
         writer = csv.writer(response)
-
-        #for x in clients.objects.raw('SELECT * FROM prueba_clients'):
-         #   for p in clients.objects.raw('SELECT *,count(b.client_id_id) as cont FROM '
-          #                               'prueba_clients c '
-           #                              'join prueba_bills b on c.id=b.client_id_id '):
-            #    row=[p.document, p.first_name, p.last_name, p.cont ]
-             #   writer.writerow(row)
-        #clientes = clients.objects.all()
         clientes = clients.objects.raw('SELECT c.id,c.first_name,c.last_name,count(b.client_id_id) as cont '
                                        'from prueba_clients c left join prueba_bills b '
                                        'on c.id=b.client_id_id group by c.id')
@@ -142,13 +128,6 @@ def imprimir(request, format=None):
             writer.writerow([cliente.id, cliente.first_name, cliente.last_name, cliente.cont])
 
     return response
-
-
-
-
-
-
-
 
 
 # -------------ViewSET-----------------------------
@@ -210,4 +189,3 @@ class RegistroViewSet(viewsets.ModelViewSet):
 class LoginView(TokenObtainPairView):
     serializer_class = TokenSerializer
     permission_classes = [permissions.AllowAny]
-
