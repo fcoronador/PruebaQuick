@@ -20,4 +20,8 @@ Las urls de acceso son:
  - localgost:8000/facturas/{num}/ GET-PUT-DELETE
  - localhost:8000/productos/ POST-GET
  - localgost:8000/productos/{num}/ GET-PUT-DELETE
+Es necesario registrase en:
+ - localhost:8000/registro
+Y logearse en:
+ - localhost:8000/login
 
